@@ -1,3 +1,4 @@
+import React from "react"
 import { Controller, SubmitHandler, useForm } from "react-hook-form"
 import { contacts } from "../api/contacts"
 import { Contact } from "../types"
@@ -8,28 +9,30 @@ interface IFormInput {
 }
 
 export const App = () => {
-  const { control, handleSubmit } = useForm<IFormInput>()
-
-  const onSubmit: SubmitHandler<IFormInput> = (data) => {
-    console.log(data)
-  }
+  const { control, watch } = useForm<IFormInput>({
+    mode: "all",
+    defaultValues: {
+      contact: contacts[0]
+    }
+  })
 
   return (
     <>
-      <div className="flex flex-1 items-center justify-center bg-gradient-to-r from-teal-400 to-cyan-400">
-        <form
-          onSubmit={handleSubmit(onSubmit)}
-          className="flex items-center gap-6"
-        >
-          <Controller
-            name="contact"
-            control={control}
-            defaultValue={contacts[0]}
-            render={({ field }) => <ComboBox {...field} />}
-          />
+      <div className="flex flex-1 flex-col items-center justify-center bg-gradient-to-r from-teal-400 to-cyan-400">
+        <div className="w-full max-w-sm">
+          <form>
+            <Controller
+              name="contact"
+              control={control}
+              defaultValue={contacts[0]}
+              render={({ field }) => <ComboBox {...field} />}
+            />
+          </form>
 
-          <button>Submit</button>
-        </form>
+          <pre className="mt-4 w-full rounded-lg bg-teal-200 p-4 shadow-sm">
+            {JSON.stringify(watch(), null, 2)}
+          </pre>
+        </div>
       </div>
     </>
   )
